@@ -36,7 +36,7 @@ export class Player {
 
   examine(subject: string) {
     const foundItem =
-      this.room.subjects.examineSubject?.[subject]?.resultSubject.name;
+      this.room.subjects?.examineSubject?.[subject]?.resultSubject.name;
     if (foundItem) {
       this.inventory = { ...this.inventory, [foundItem]: foundItem };
       console.log(
@@ -50,7 +50,7 @@ export class Player {
   use(subject1: string, subject2: string): void {
     const canBeUsed =
       this.inventory?.[subject1] &&
-      this.room.subjects.useSubject[subject1]?.usedOnSubject.name === subject2;
+      this.room.subjects?.useSubject[subject1]?.usedOnSubject.name === subject2;
     if (canBeUsed) {
       this.room.conditions.useSubject= true;
       console.log(`you unlock ${subject2} with ${subject1}\n`);
@@ -63,8 +63,8 @@ export class Player {
 
   open(subject: string) {
     
-    const canBeOpened = this.room.subjects.openSubject?.name === subject;
-    const isUseSatisfied = this.room.conditions.useSubject;
+    const canBeOpened = this?.room?.subjects?.openSubject?.name === subject;
+    const isUseSatisfied = this.room?.conditions.useSubject;
     if (canBeOpened && isUseSatisfied) {
       this.room.conditions.openSubject = true
       console.log(`You opened the ${subject} successfully\n`);
