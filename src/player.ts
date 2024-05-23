@@ -1,53 +1,44 @@
-import { rooms } from "./room";
+import { Room } from "./RoomObject";
 
-type direction = "north" | "west" | "east" | "south";
+type Direction = "north" | "west" | "east" | "south";
 
 export class Player {
-  room: string;
-  inventory: Record<string, boolean>;
-  constructor() {
-    this.room = "E1";
-    this.inventory = {
-      lockPin: false,
-      bonzo: false,
-    };
+  room: Room;
+  inventory: Record<string, Object>;
+  constructor(room: Room) {
+    this.room = room;
+    this.inventory = {};
   }
 
-  move(direction: string) {
-    const openConditions = rooms[this.room]?.conditions?.openConditions;
-    const useConditions = rooms[this.room]?.conditions?.useConditions;
-    const conditionalNextRoom = rooms[this.room]?.conditionalNextRoom;
-    const nextRoom = rooms[this.room]?.nextRooms?.[direction as direction];
+  move(direction: string, map: Record<string, Room>) {
+    const nextRoom = this.room.directions?.[direction as Direction];
 
     if (nextRoom) {
-      if (!conditionalNextRoom || nextRoom !== conditionalNextRoom) {
-        this.room = nextRoom;
-        console.log(`You move ${direction} successfully\n`);
-      } else if (
-        Object.values({ ...openConditions, ...useConditions }).every(Boolean)
+      if (
+        nextRoom === this.room.roomNeededUnlock && Object.values(this.room.conditions).every(Boolean) || 
+        !this.room.conditions || 
+        this.room.conditions && nextRoom !== this.room.roomNeededUnlock  
       ) {
-        this.room = nextRoom;
-        console.log(`You move ${direction} successfully\n`);
+        this.room = map[nextRoom];
       } else {
-        console.log("You can't go that way yet \n");
+        console.log(`You can't move this direction yet \n`);
       }
     } else {
-      console.log("You can't go that way \n");
+      console.log(`You can't move this direction \n`);
     }
   }
 
   getInventory() {
     for (const item in this.inventory) {
-      if (this.inventory[item]) {
-        console.log(`${item}\n`);
-      }
+      console.log(this.inventory[item]);
     }
   }
 
   examine(subject: string) {
-    const foundItem = rooms[this.room]?.items?.examineItems[subject];
+    const foundItem =
+      this.room.subjects.examineSubject?.[subject]?.resultSubject.name;
     if (foundItem) {
-      this.inventory = { ...this.inventory, [foundItem]: true };
+      this.inventory = { ...this.inventory, [foundItem]: foundItem };
       console.log(
         `You examine the ${subject} and you collect ${foundItem} to your inventory\n`
       );
@@ -58,10 +49,10 @@ export class Player {
 
   use(subject1: string, subject2: string): void {
     const canBeUsed =
-      rooms[this.room]?.items?.useItems?.[subject1] === subject2 &&
-      this.inventory[subject1];
+      this.inventory?.[subject1] &&
+      this.room.subjects.useSubject[subject1]?.usedOnSubject.name === subject2;
     if (canBeUsed) {
-      rooms[this.room].conditions.useConditions[subject2] = true;
+      this.room.conditions.useSubject= true;
       console.log(`you unlock ${subject2} with ${subject1}\n`);
     } else {
       console.log(
@@ -71,13 +62,11 @@ export class Player {
   }
 
   open(subject: string) {
-    console.log(subject);
-    const canBeOpened = rooms[this.room]?.items?.openItems?.[subject];
-    const isUseSatisfied = Object.values(
-      rooms[this.room]?.conditions?.useConditions || {}
-    ).every(Boolean);
+    
+    const canBeOpened = this.room.subjects.openSubject?.name === subject;
+    const isUseSatisfied = this.room.conditions.useSubject;
     if (canBeOpened && isUseSatisfied) {
-      rooms[this.room].conditions.openConditions[subject] = true;
+      this.room.conditions.openSubject = true
       console.log(`You opened the ${subject} successfully\n`);
     } else {
       console.log(

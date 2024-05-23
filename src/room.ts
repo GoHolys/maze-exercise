@@ -25,7 +25,6 @@ interface RoomsMap {
 export const rooms: RoomsMap = {
   E1: {
     name: "E1",
-
     items: {
       examineItems: { bed: "picklock" },
       useItems: { picklock: "lock" },
