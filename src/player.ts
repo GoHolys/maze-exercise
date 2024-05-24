@@ -11,7 +11,7 @@ export class Player {
   }
 
   move(direction: string, map: Record<string, Room>) {
-    const nextRoom = this.room.directions?.[direction as Direction];
+    const nextRoom = this.room?.directions?.[direction as Direction];
 
     if (nextRoom) {
       if (
@@ -64,7 +64,7 @@ export class Player {
   open(subject: string) {
     
     const canBeOpened = this?.room?.subjects?.openSubject?.name === subject;
-    const isUseSatisfied = this.room?.conditions.useSubject;
+    const isUseSatisfied = this.room?.conditions?.useSubject;
     if (canBeOpened && isUseSatisfied) {
       this.room.conditions.openSubject = true
       console.log(`You opened the ${subject} successfully\n`);

@@ -1,6 +1,5 @@
 import readlineSync from "readline-sync";
-import { Player } from "./player";
-import { Game } from "./Game";
+import { Game } from "./game";
 
 const game = new Game();
 
