@@ -1,12 +1,11 @@
 import { Player } from "./player";
-import { Room } from "./RoomObject";
+import { Room } from "./room";
 import { ExamineSubject, OpenSubject, Subject, UseSubject } from "./subject";
 
 export class Game {
   _map: Record<string, Room> = {};
   _subjects: Record<string, Subject>;
   player: Player;
-  commands: string[] = ["move", "examine", "use", "open", "inventory"];
 
   constructor() {
     const bars = new OpenSubject("bars");

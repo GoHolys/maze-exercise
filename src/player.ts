@@ -1,4 +1,4 @@
-import { Room } from "./RoomObject";
+import { Room } from "./room";
 
 type Direction = "north" | "west" | "east" | "south";
 
