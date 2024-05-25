@@ -12,7 +12,11 @@ function gameLoop() {
     console.log("You officially escaped the castle and WON!\n");
     return;
   }
-  console.log(`The name of the current room is ${game.player.room.name}\n`);
+  console.log(
+    `The name of the current room is ${game.player.room.name}. ${
+      game.map[game.player.room.name].description
+    }\n`
+  );
 
   const command = readlineSync.question(
     "Enter your command (move/examine/use/open/inventory): \n"
