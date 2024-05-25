@@ -58,17 +58,12 @@ export class Game {
       west: null,
     });
 
-    this._map["E3"] = new Room(
-      "E3",
-      "There is a bowl in this room",
-      {
-        north: "E4",
-        east: null,
-        south: null,
-        west: "C3",
-      },
-      { examineSubject: { bowl } }
-    );
+    this._map["E3"] = new Room("E3", "-", {
+      north: "E4",
+      east: null,
+      south: null,
+      west: "C3",
+    });
 
     this._map["E4"] = new Room(
       "E4",
